@@ -23,6 +23,7 @@ class AirbrakeSync < Thor
           errors_collection.insert(AirbrakeAPI.error(error['id']))
           notice_page = 1
           while (current_notice_page = AirbrakeAPI.notices(error['id'], page: notice_page) || []).any?
+            puts "Notice page #{notice_page}"
             notice_page = notice_page + 1
             current_notice_page.each do |notice|
               if not notices_collection.find_one(id: notice['id'])
