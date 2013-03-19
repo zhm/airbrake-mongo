@@ -43,10 +43,6 @@ class AirbrakeSync < Thor
     def errors_collection
       @errors ||= mongo_database.collection("errors")
     end
-
-    def error_by_id(id)
-
-    end
   end
 end
 
