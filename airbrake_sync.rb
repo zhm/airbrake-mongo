@@ -21,6 +21,15 @@ class AirbrakeSync < Thor
       current_page.each do |error|
         if not errors_collection.find_one(id: error['id'])
           errors_collection.insert(AirbrakeAPI.error(error['id']))
+          notice_page = 1
+          while current_notice_page = AirbrakeAPI.notices(error['id'], page: notice_page)
+            notice_page = notice_page + 1
+            current_notice_page.each do |notice|
+              if not notices_collection.find_one(id: notice['id'])
+                notices_collection.insert(notice)
+              end
+            end
+          end
         end
       end
       page = page + 1
@@ -42,6 +51,10 @@ class AirbrakeSync < Thor
 
     def errors_collection
       @errors ||= mongo_database.collection("errors")
+    end
+
+    def notices_collection
+      @notices ||= mongo_database.collection("notices")
     end
   end
 end
