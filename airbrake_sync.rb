@@ -22,7 +22,7 @@ class AirbrakeSync < Thor
         if not errors_collection.find_one(id: error['id'])
           errors_collection.insert(AirbrakeAPI.error(error['id']))
           notice_page = 1
-          while current_notice_page = AirbrakeAPI.notices(error['id'], page: notice_page)
+          while (current_notice_page = AirbrakeAPI.notices(error['id'], page: notice_page) || []).any?
             notice_page = notice_page + 1
             current_notice_page.each do |notice|
               if not notices_collection.find_one(id: notice['id'])
